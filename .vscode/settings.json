@@ -1,4 +1,5 @@
 {
-    "python.pythonPath": "/Users/tmikonen/anaconda3/bin/python",
-    "python.linting.pylintEnabled": true
+    "python.pythonPath": "/home/dante/.local/share/virtualenvs/magic_card_detector-eXsW3bJi/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.formatting.provider": "black"
 }
