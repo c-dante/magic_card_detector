@@ -553,7 +553,7 @@ class TestImage:
                 plt.text(
                     np.average(bquad_corners[:, 0]),
                     np.average(bquad_corners[:, 1]),
-                    candidate.name.capitalize(),
+                    candidate.name,
                     horizontalalignment="center",
                     fontsize=fntsze,
                     bbox=dict(facecolor=bbox_color, alpha=0.7),
@@ -638,7 +638,9 @@ class MagicCardDetector:
         """
         hlist = []
         for image in self.reference_images:
-            hlist.append(ReferenceImage(image.name, None, None, image.phash))
+            hlist.append(
+                ReferenceImage(image.name, None, None, image.phash, meta=image.meta)
+            )
 
         with open(path, "wb") as fhandle:
             pickle.dump(hlist, fhandle)
@@ -653,7 +655,9 @@ class MagicCardDetector:
             hashed_list = pickle.load(filename)
         for ref_im in hashed_list:
             self.reference_images.append(
-                ReferenceImage(ref_im.name, None, self.clahe, ref_im.phash)
+                ReferenceImage(
+                    ref_im.name, None, self.clahe, ref_im.phash, meta=ref_im.meta
+                )
             )
         print("Done.")
 
@@ -877,9 +881,8 @@ class MagicCardDetector:
             if self.verbose:
                 print("Phash statistical distance: " + str(d_0_dist[j]))
             if d_0_dist[j] > self.hash_separation_thr and np.argmax(d_0_dist) == j:
-                card_name = self.reference_images[np.argmin(d_0[:, j])].name.split(
-                    ".jpg"
-                )[0]
+                ref_img = self.reference_images[np.argmin(d_0[:, j])]
+                card_name = "[{}] {}".format(ref_img.meta["set"], ref_img.meta["name"])
                 is_recognized = True
                 recognition_score = d_0_dist[j] / self.hash_separation_thr
                 break
