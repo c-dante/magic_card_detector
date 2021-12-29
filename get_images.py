@@ -52,7 +52,7 @@ with open("./data/output.json") as input_json:
         if idx % 1000:
             print("Fetching {}...".format(idx))
         for (idx, image) in enumerate(card["images"]):
-            filename = get_image_filename(card["set"], idx)
+            filename = get_image_filename(card, idx)
             pool.apply_async(
                 download_url,
                 args=[image, filename],

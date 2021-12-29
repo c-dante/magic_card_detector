@@ -428,12 +428,13 @@ class ReferenceImage:
     Container for a card image and the associated recoginition data.
     """
 
-    def __init__(self, name, original_image, clahe, phash=None):
+    def __init__(self, name, original_image, clahe, phash=None, meta={}):
         self.name = name
         self.original = original_image
         self.clahe = clahe
         self.adjusted = None
         self.phash = phash
+        self.meta = meta
 
         if self.original is not None:
             self.histogram_adjust()
@@ -663,8 +664,12 @@ class MagicCardDetector:
         """
         print("Reading images from " + str(path))
         print("...", end=" ")
-        filenames = glob.glob(path + "*.jpg")
+        filenames = glob.glob(os.path.join(path, "*.jpg"))
+        count = 0
         for filename in filenames:
+            count += 1
+            if count % 100 == 0:
+                print("Reading {}...".format(count))
             img = cv2.imread(filename)
             img_name = filename.split(path)[1]
             self.reference_images.append(ReferenceImage(img_name, img, self.clahe))
